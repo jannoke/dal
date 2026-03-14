@@ -23,7 +23,22 @@ jobs:
             rockylinux:9 \
             bash -lc '
               set -euo pipefail
-              dnf install -y --setopt=install_weak_deps=False gcc-c++ sqlite-devel
+              dnf install -y --setopt=install_weak_deps=False gcc-c++ sqlite-devel file
               dnf clean all
               g++ -std=gnu++98 -O2 -o dal src/dal.cpp src/includes/ConfigFile/ConfigFile.cpp -lsqlite3
+              test -f dal
+              ls -l dal
+              file dal
             '
+
+      - name: Verify compiled artifact exists
+        run: |
+          test -f dal
+          ls -l dal
+
+      - name: Upload compiled artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dal-rocky-linux-9
+          path: dal
+          if-no-files-found: error
