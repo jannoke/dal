@@ -1,0 +1,29 @@
+name: Compile on Rocky Linux 9
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Compile source in Rocky Linux 9
+        run: |
+          docker run --rm \
+            -v "$PWD:/workspace" \
+            -w /workspace \
+            rockylinux:9 \
+            bash -lc '
+              set -euo pipefail
+              dnf install -y --setopt=install_weak_deps=False gcc-c++ sqlite-devel
+              dnf clean all
+              g++ -std=gnu++98 -O2 -o dal src/dal.cpp src/includes/ConfigFile/ConfigFile.cpp -lsqlite3
+            '
