@@ -21,4 +21,8 @@ jobs:
             -v "$PWD:/workspace" \
             -w /workspace \
             rockylinux:9 \
-            bash -lc "dnf install -y gcc-c++ sqlite-devel && g++ -std=gnu++98 -O2 -o dal src/dal.cpp src/includes/ConfigFile/ConfigFile.cpp -lsqlite3"
+            bash -lc '
+              set -euo pipefail
+              dnf install -y gcc-c++ sqlite-devel
+              g++ -std=gnu++98 -O2 -o dal src/dal.cpp src/includes/ConfigFile/ConfigFile.cpp -lsqlite3
+            '
