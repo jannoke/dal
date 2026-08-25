@@ -1,0 +1,13 @@
+[package]
+name = "dal"
+version = "1.2.0"
+edition = "2021"
+
+[dependencies]
+rusqlite = { version = "0.31", features = ["bundled"] }
+chrono = { version = "0.4", default-features = false, features = ["std", "clock"] }
+signal-hook = "0.3"
+thiserror = "1"
+
+[profile.release]
+opt-level = 3

@@ -23,9 +23,13 @@ jobs:
             rockylinux:9 \
             bash -lc '
               set -euo pipefail
-              dnf install -y --setopt=install_weak_deps=False gcc-c++ sqlite-devel file
+              dnf install -y --setopt=install_weak_deps=False gcc-c++ file
               dnf clean all
-              g++ -std=gnu++98 -O2 -o dal src/dal.cpp src/includes/ConfigFile/ConfigFile.cpp -lsqlite3
+              curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal --default-toolchain stable
+              source "$HOME/.cargo/env"
+              cargo test --release --locked
+              cargo build --release --locked
+              cp target/release/dal ./dal
               test -f dal
               ls -l dal
               file dal
